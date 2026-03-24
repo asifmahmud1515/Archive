@@ -738,9 +738,95 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
   );
 };
 
+// --- Intro Component ---
+
+const Intro = ({ onComplete }: { onComplete: () => void }) => {
+  useEffect(() => {
+    const timer = setTimeout(onComplete, 3500);
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 1 }}
+      className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center text-center p-6 overflow-hidden"
+    >
+      {/* Background grain effect */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] brightness-100 contrast-150" />
+      
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, ease: "easeOut" }}
+        className="relative z-10 space-y-12"
+      >
+        <div className="relative px-12 py-8">
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 1.5, ease: "easeInOut" }}
+            className="absolute top-0 left-0 h-[1px] bg-primary-fixed"
+          />
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: "100%" }}
+            transition={{ duration: 1.5, ease: "easeInOut", delay: 0.5 }}
+            className="absolute top-0 right-0 w-[1px] bg-primary-fixed"
+          />
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: "100%" }}
+            transition={{ duration: 1.5, ease: "easeInOut", delay: 1 }}
+            className="absolute bottom-0 right-0 h-[1px] bg-primary-fixed"
+          />
+          <motion.div
+            initial={{ height: 0 }}
+            animate={{ height: "100%" }}
+            transition={{ duration: 1.5, ease: "easeInOut", delay: 1.5 }}
+            className="absolute bottom-0 left-0 w-[1px] bg-primary-fixed"
+          />
+
+          <h1 className="font-headline text-4xl md:text-7xl tracking-[0.25em] uppercase font-extralight leading-tight">
+            Welcome to <br />
+            <span className="text-primary-fixed">The Archive</span>
+          </h1>
+        </div>
+        
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 2 }}
+          className="space-y-2"
+        >
+          <p className="text-[10px] font-bold tracking-[0.6em] uppercase text-outline">
+            A project by
+          </p>
+          <p className="font-headline text-2xl tracking-[0.1em] uppercase text-white">
+            Dean Keaton
+          </p>
+        </motion.div>
+      </motion.div>
+
+      {/* Decorative scanning line */}
+      <motion.div
+        initial={{ top: "-10%" }}
+        animate={{ top: "110%" }}
+        transition={{ duration: 3, ease: "linear", repeat: Infinity }}
+        className="absolute left-0 right-0 h-[1px] bg-primary-fixed/20 blur-[1px] pointer-events-none z-20"
+      />
+      
+      {/* Vignette */}
+      <div className="absolute inset-0 pointer-events-none shadow-[inset_0_0_150px_rgba(0,0,0,0.9)]" />
+    </motion.div>
+  );
+};
+
 // --- Main App ---
 
 export default function App() {
+  const [showIntro, setShowIntro] = useState(true);
   const [view, setView] = useState<View>('DOSSIER');
   const [selectedItem, setSelectedItem] = useState<ArchiveItem | null>(null);
   const [archives, setArchives] = useState<ArchiveItem[]>(ARCHIVES);
@@ -904,75 +990,83 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-background text-on-surface selection:bg-primary-fixed selection:text-white">
-      <GrainOverlay />
-      <TopBar 
-        title={view === 'DETAIL' ? 'THE ARCHIVE' : view} 
-        onBack={view === 'DETAIL' ? handleBack : undefined}
-        onMenu={() => setIsMenuOpen(true)}
-        onSearch={() => setView('INVESTIGATE')}
-      />
-
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
-            />
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 left-0 h-full w-80 bg-[#131313] z-[70] border-r border-outline-variant/20 p-8 flex flex-col"
-            >
-              <div className="flex justify-between items-center mb-12">
-                <h2 className="font-headline text-2xl font-black tracking-tighter">THE ARCHIVE</h2>
-                <button onClick={() => setIsMenuOpen(false)} className="text-outline hover:text-white">
-                  <ArrowLeft size={24} />
-                </button>
-              </div>
-              <nav className="space-y-6 flex-1">
-                {[
-                  { id: 'DOSSIER', label: 'Dossier Feed', icon: Grid },
-                  { id: 'INVESTIGATE', label: 'Investigate', icon: Search },
-                  { id: 'VAULT', label: 'The Vault', icon: FolderHeart },
-                  { id: 'IDENTITY', label: 'Identity', icon: User },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setView(item.id as View);
-                      setIsMenuOpen(false);
-                    }}
-                    className={`flex items-center gap-4 w-full p-4 transition-colors ${
-                      view === item.id ? 'bg-primary-fixed text-white' : 'text-outline hover:bg-surface-high'
-                    }`}
-                  >
-                    <item.icon size={20} />
-                    <span className="font-label text-xs uppercase tracking-widest font-bold">{item.label}</span>
-                  </button>
-                ))}
-              </nav>
-              <div className="pt-8 border-t border-outline-variant/10">
-                <p className="text-[10px] text-outline uppercase tracking-[0.3em] font-bold mb-2">Clearance Level 4</p>
-                <p className="text-[10px] text-outline-variant uppercase tracking-[0.2em]">Agent: Elias Thorne</p>
-              </div>
-            </motion.div>
-          </>
+      <AnimatePresence mode="wait">
+        {showIntro && (
+          <Intro onComplete={() => setShowIntro(false)} />
         )}
       </AnimatePresence>
-      
-      <main>
-        <AnimatePresence mode="wait">
-          {renderView()}
-        </AnimatePresence>
-      </main>
 
-      <BottomNav activeView={view} setView={setView} />
+      <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+        <GrainOverlay />
+        <TopBar 
+          title={view === 'DETAIL' ? 'THE ARCHIVE' : view} 
+          onBack={view === 'DETAIL' ? handleBack : undefined}
+          onMenu={() => setIsMenuOpen(true)}
+          onSearch={() => setView('INVESTIGATE')}
+        />
+
+        <AnimatePresence>
+          {isMenuOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMenuOpen(false)}
+                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60]"
+              />
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed top-0 left-0 h-full w-80 bg-[#131313] z-[70] border-r border-outline-variant/20 p-8 flex flex-col"
+              >
+                <div className="flex justify-between items-center mb-12">
+                  <h2 className="font-headline text-2xl font-black tracking-tighter">THE ARCHIVE</h2>
+                  <button onClick={() => setIsMenuOpen(false)} className="text-outline hover:text-white">
+                    <ArrowLeft size={24} />
+                  </button>
+                </div>
+                <nav className="space-y-6 flex-1">
+                  {[
+                    { id: 'DOSSIER', label: 'Dossier Feed', icon: Grid },
+                    { id: 'INVESTIGATE', label: 'Investigate', icon: Search },
+                    { id: 'VAULT', label: 'The Vault', icon: FolderHeart },
+                    { id: 'IDENTITY', label: 'Identity', icon: User },
+                  ].map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setView(item.id as View);
+                        setIsMenuOpen(false);
+                      }}
+                      className={`flex items-center gap-4 w-full p-4 transition-colors ${
+                        view === item.id ? 'bg-primary-fixed text-white' : 'text-outline hover:bg-surface-high'
+                      }`}
+                    >
+                      <item.icon size={20} />
+                      <span className="font-label text-xs uppercase tracking-widest font-bold">{item.label}</span>
+                    </button>
+                  ))}
+                </nav>
+                <div className="pt-8 border-t border-outline-variant/10">
+                  <p className="text-[10px] text-outline uppercase tracking-[0.3em] font-bold mb-2">Clearance Level 4</p>
+                  <p className="text-[10px] text-outline-variant uppercase tracking-[0.2em]">Agent: Elias Thorne</p>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+        
+        <main>
+          <AnimatePresence mode="wait">
+            {renderView()}
+          </AnimatePresence>
+        </main>
+
+        <BottomNav activeView={view} setView={setView} />
+      </div>
     </div>
   );
 }
