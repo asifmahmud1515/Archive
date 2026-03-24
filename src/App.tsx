@@ -1066,6 +1066,13 @@ export default function App() {
         </main>
 
         <BottomNav activeView={view} setView={setView} />
+        
+        {/* Environment Debug Tag */}
+        <div className="fixed bottom-24 right-4 z-[100] pointer-events-none">
+          <span className="text-[8px] font-mono text-outline-variant uppercase tracking-widest bg-black/40 px-2 py-1">
+            Build: 2026.03.24.01 // {window.location.protocol === 'file:' ? 'LOCAL_APK' : 'WEB_ENV'}
+          </span>
+        </div>
       </div>
     </div>
   );
