@@ -2,20 +2,23 @@
 @import "tailwindcss";
 
 :root {
-  --background: #131313;
-  --surface: #1c1b1b;
-  --surface-container: #201f1f;
-  --surface-high: #2a2a2a;
-  --primary-fixed: #a93631;
-  --primary-fixed-dim: #881e1d;
-  --outline: #919191;
-  --outline-variant: #474747;
-  --on-surface: #e5e2e1;
-  --on-surface-variant: #c6c6c6;
+  --background: #050505;
+  --surface: #0a0a0a;
+  --surface-container: #121212;
+  --surface-high: #1a1a1a;
+  --primary: #00f2ff; /* High-tech cyan */
+  --primary-dim: #008c94;
+  --accent: #ff0055; /* Vibrant pink accent */
+  --outline: #333333;
+  --outline-variant: #222222;
+  --on-surface: #ffffff;
+  --on-surface-variant: #a0a0a0;
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.05);
 }
 
 @theme {
-  --font-headline: "Newsreader", serif;
+  --font-headline: "Inter", sans-serif;
   --font-sans: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
@@ -23,8 +26,9 @@
   --color-surface: var(--surface);
   --color-surface-container: var(--surface-container);
   --color-surface-high: var(--surface-high);
-  --color-primary-fixed: var(--primary-fixed);
-  --color-primary-fixed-dim: var(--primary-fixed-dim);
+  --color-primary: var(--primary);
+  --color-primary-dim: var(--primary-dim);
+  --color-accent: var(--accent);
   --color-outline: var(--outline);
   --color-outline-variant: var(--outline-variant);
   --color-on-surface: var(--on-surface);
@@ -33,29 +37,32 @@
 
 @layer base {
   body {
-    @apply bg-background text-on-surface font-sans;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-headline;
+    @apply bg-background text-on-surface font-sans antialiased selection:bg-primary selection:text-black;
+    overflow-x: hidden;
   }
 }
 
 @layer utilities {
-  .film-grain {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.03;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
   }
 
-  .noir-shadow {
-    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+  .glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .neon-glow {
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+  }
+
+  .neon-text {
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
   }
 
   .scrollbar-hide::-webkit-scrollbar {
@@ -64,5 +71,9 @@
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 }
