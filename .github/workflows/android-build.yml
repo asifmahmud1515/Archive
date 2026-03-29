@@ -15,8 +15,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '22.x'
           cache: 'npm'
+
+      - name: Check Node Version
+        run: node -v
 
       - name: Install Dependencies
         run: npm install
@@ -35,8 +38,11 @@ jobs:
 
       - name: Capacitor Sync
         run: |
-          npx cap add android
-          npx cap sync android
+          ls -la dist
+          if [ ! -d "android" ]; then
+            npm run cap:add
+          fi
+          npm run cap:sync
 
       - name: Build APK
         run: |
