@@ -28,7 +28,7 @@ export default defineConfig(({ mode }) => {
       assetsDir: 'assets',
       emptyOutDir: true,
       cssCodeSplit: false,
-      target: 'esnext'
+      target: 'es2020'
     },
     server: {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.

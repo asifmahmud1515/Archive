@@ -1,3 +1,4 @@
+import { App as CapacitorApp } from '@capacitor/app';
 import { 
   Search, 
   Menu, 
@@ -152,7 +153,7 @@ const TopBar = ({ title, onBack, onMenu, onSearch }: { title: string; onBack?: (
       </button>
       <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-accent p-[1px]">
         <div className="w-full h-full rounded-full bg-background flex items-center justify-center overflow-hidden">
-          <img src="https://picsum.photos/seed/user123/100/100" alt="Profile" className="w-full h-full object-cover" />
+          <img src="https://picsum.photos/seed/user123/100/100" alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
         </div>
       </div>
     </div>
@@ -238,6 +239,7 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
                   src={`https://picsum.photos/seed/${story}/100/100`} 
                   alt={story} 
                   className="w-full h-full rounded-full object-cover"
+                  referrerPolicy="no-referrer"
                 />
               </div>
             </div>
@@ -258,7 +260,7 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
         >
           <div className="p-4 flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-surface-high overflow-hidden">
-              <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" />
+              <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
             <div>
               <h4 className="text-xs font-bold tracking-tight">{item.creator || 'ARCHIVE_CORE'}</h4>
@@ -444,7 +446,7 @@ const VaultView = ({ vault, onSelect }: { vault: ArchiveItem[], onSelect: (item:
           {vault.map(item => (
             <div key={item.id} onClick={() => onSelect(item)} className="glass-card rounded-2xl p-4 flex gap-4 items-center group cursor-pointer hover:border-primary/30 transition-colors">
               <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-surface-high">
-                <img src={item.image || `https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" />
+                <img src={item.image || `https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
               <div className="flex-1 min-w-0">
                 <h4 className="font-bold text-sm truncate">{item.title}</h4>
@@ -548,7 +550,7 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
         <div className="glass-card rounded-3xl p-6 space-y-4">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-surface-high overflow-hidden">
-              <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" />
+              <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
             <div>
               <p className="text-[10px] opacity-50 uppercase tracking-widest">Source Entity</p>
@@ -649,6 +651,24 @@ export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    const setupBackButton = async () => {
+      await CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+        if (view === 'DETAIL') {
+          handleBack();
+        } else if (view === 'INVESTIGATE' || view === 'VAULT') {
+          setView('DOSSIER');
+        } else {
+          CapacitorApp.exitApp();
+        }
+      });
+    };
+    setupBackButton();
+    return () => {
+      CapacitorApp.removeAllListeners();
+    };
+  }, [view]);
 
   useEffect(() => {
     localStorage.setItem('archive_vault', JSON.stringify(vault));
