@@ -14,17 +14,27 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <title>Archive Neural Interface</title>
     <style>
-      html, body {
+      html {
+        height: auto;
+        min-height: 100%;
+        overflow: visible;
+      }
+      body {
         background-color: #050505 !important;
         color: #ffffff !important;
         margin: 0;
         padding: 0;
         width: 100%;
         min-height: 100%;
+        overflow-y: auto !important;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
       }
       #root {
         min-height: 100%;
         background-color: #050505;
+        overflow: visible;
       }
     </style>
   </head>

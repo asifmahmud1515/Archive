@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   --background: #050505;
   --surface: #0a0a0a;
@@ -37,7 +41,11 @@
 @layer base {
   body {
     @apply bg-background text-on-surface font-sans antialiased selection:bg-primary selection:text-black;
-    overflow-x: hidden;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
   }
 }
 

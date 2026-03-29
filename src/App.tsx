@@ -272,12 +272,13 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
           </div>
 
           {item.image && (
-            <div className="relative aspect-square overflow-hidden">
+            <div className="relative aspect-square overflow-hidden bg-surface-container">
               <img 
                 src={item.image} 
                 alt={item.title}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 referrerPolicy="no-referrer"
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
             </div>
@@ -400,10 +401,15 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
               key={item.id}
               layoutId={item.id}
               onClick={() => onSelect(item)}
-              className="glass-card rounded-2xl overflow-hidden cursor-pointer group aspect-[3/4] relative"
+              className="glass-card rounded-2xl overflow-hidden cursor-pointer group aspect-[3/4] relative bg-surface-container"
             >
               {item.image ? (
-                <img src={item.image} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" referrerPolicy="no-referrer" />
+                <img 
+                  src={item.image} 
+                  className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                  referrerPolicy="no-referrer"
+                  loading="lazy"
+                />
               ) : (
                 <div className="w-full h-full bg-surface-high flex items-center justify-center">
                   <FileText size={32} className="opacity-20" />
@@ -475,9 +481,9 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
       transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      className="fixed inset-0 bg-background z-[60] overflow-y-auto pb-32"
+      className="fixed inset-0 bg-background z-[60] overflow-y-auto overflow-x-hidden pb-32"
     >
-      <div className="relative h-[60vh]">
+      <div className="relative aspect-[4/5] md:aspect-video min-h-[400px]">
         <img 
           src={item.image || `https://archive.org/services/img/${item.identifier}`} 
           className="w-full h-full object-cover"
@@ -844,14 +850,14 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-on-surface selection:bg-primary selection:text-background antialiased">
+    <div className="min-h-full bg-background text-on-surface selection:bg-primary selection:text-background antialiased overflow-x-hidden">
       <AnimatePresence mode="wait">
         {showIntro && (
           <Intro onComplete={() => setShowIntro(false)} />
         )}
       </AnimatePresence>
 
-      <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+      <div className={`transition-opacity duration-1000 ${showIntro ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'}`}>
         <GlassOverlay />
         <TopBar 
           title={view === 'DETAIL' ? 'Archive' : view === 'DOSSIER' ? 'Feed' : view === 'INVESTIGATE' ? 'Explore' : view} 
