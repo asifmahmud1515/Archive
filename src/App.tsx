@@ -33,7 +33,7 @@ import { searchInternetArchive, getArchiveImageUrl, getArchiveItemUrl, getArchiv
 
 // --- Types ---
 
-type View = 'DOSSIER' | 'INVESTIGATE' | 'VAULT' | 'IDENTITY' | 'DETAIL';
+type View = 'DOSSIER' | 'INVESTIGATE' | 'VAULT' | 'DETAIL';
 
 interface ArchiveItem {
   id: string;
@@ -131,7 +131,7 @@ const GlassOverlay = () => (
 );
 
 const TopBar = ({ title, onBack, onMenu, onSearch }: { title: string; onBack?: () => void; onMenu?: () => void; onSearch?: () => void }) => (
-  <header className="fixed top-0 w-full flex justify-between items-center px-6 h-20 glass z-50 border-b border-white/5">
+  <header className="fixed top-0 w-full flex justify-between items-center px-6 pt-[env(safe-area-inset-top)] h-[calc(5rem+env(safe-area-inset-top))] glass z-50 border-b border-white/5">
     <div className="flex items-center gap-4">
       {onBack ? (
         <button onClick={onBack} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
@@ -164,44 +164,46 @@ const BottomNav = ({ activeView, setView }: { activeView: View; setView: (v: Vie
     { id: 'DOSSIER', label: 'Feed', icon: Grid },
     { id: 'INVESTIGATE', label: 'Explore', icon: Search },
     { id: 'VAULT', label: 'Vault', icon: FolderHeart },
-    { id: 'IDENTITY', label: 'Profile', icon: User },
   ];
 
   return (
-    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-md z-50">
-      <nav className="glass rounded-3xl flex justify-around items-center h-16 px-2 shadow-2xl border border-white/10">
-        {navItems.map((item) => {
-          const isActive = activeView === item.id || (activeView === 'DETAIL' && item.id === 'DOSSIER');
-          return (
-            <button
-              key={item.id}
-              onClick={() => setView(item.id)}
-              className="relative flex flex-col items-center justify-center w-full h-full transition-all duration-300"
-            >
-              <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}>
-                <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
-              </div>
-              {isActive && (
-                <motion.div 
-                  layoutId="activeNav"
-                  className="absolute -bottom-1 w-1 h-1 rounded-full bg-primary neon-glow"
-                />
-              )}
-            </button>
-          );
-        })}
-      </nav>
+    <div className="fixed bottom-0 left-0 right-0 pb-[env(safe-area-inset-bottom)] z-50 flex justify-center">
+      <div className="w-full max-w-md px-6 pb-6">
+        <nav className="glass rounded-3xl flex justify-around items-center h-16 px-2 shadow-2xl border border-white/10">
+          {navItems.map((item) => {
+            const isActive = activeView === item.id || (activeView === 'DETAIL' && item.id === 'DOSSIER');
+            return (
+              <button
+                key={item.id}
+                onClick={() => setView(item.id)}
+                className="relative flex flex-col items-center justify-center w-full h-full transition-all duration-300"
+              >
+                <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}>
+                  <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                </div>
+                {isActive && (
+                  <motion.div 
+                    layoutId="activeNav"
+                    className="absolute -bottom-1 w-1 h-1 rounded-full bg-primary neon-glow"
+                  />
+                )}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
     </div>
   );
 };
 
 // --- Views ---
 
-const DossierFeedView = ({ onSelect, archives, onLoadMore, loading }: { 
+const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick }: { 
   onSelect: (item: ArchiveItem) => void, 
   archives: ArchiveItem[],
   onLoadMore: () => void,
-  loading: boolean
+  loading: boolean,
+  onStoryClick: (topic: string) => void
 }) => {
   const observer = React.useRef<IntersectionObserver | null>(null);
   const lastElementRef = useCallback((node: HTMLDivElement | null) => {
@@ -220,13 +222,17 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading }: {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-24 pb-32 px-4 max-w-lg mx-auto space-y-8"
+      className="pt-32 pb-40 px-4 max-w-2xl mx-auto space-y-8"
     >
       {/* Stories/Highlights */}
       <section className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
         {['UFOs', 'Noir', 'Space', 'Secrets', 'History'].map((story, i) => (
-          <div key={story} className="flex flex-col items-center gap-2 flex-shrink-0">
-            <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-primary via-accent to-primary animate-spin-slow">
+          <button 
+            key={story} 
+            onClick={() => onStoryClick(story)}
+            className="flex flex-col items-center gap-2 flex-shrink-0 group"
+          >
+            <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-primary via-accent to-primary animate-spin-slow group-hover:scale-110 transition-transform">
               <div className="w-full h-full rounded-full bg-background p-1">
                 <img 
                   src={`https://picsum.photos/seed/${story}/100/100`} 
@@ -235,8 +241,8 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading }: {
                 />
               </div>
             </div>
-            <span className="text-[10px] font-medium tracking-wide uppercase opacity-70">{story}</span>
-          </div>
+            <span className="text-[10px] font-medium tracking-wide uppercase opacity-70 group-hover:opacity-100 transition-opacity">{story}</span>
+          </button>
         ))}
       </section>
 
@@ -412,64 +418,6 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
     </motion.div>
   );
 };
-
-const IdentityView = () => (
-  <motion.div 
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    exit={{ opacity: 0 }}
-    className="pt-24 pb-32 px-6 max-w-lg mx-auto space-y-8"
-  >
-    <div className="glass-card rounded-[2.5rem] p-8 text-center relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
-      <div className="relative z-10">
-        <div className="w-24 h-24 rounded-full mx-auto p-1 bg-gradient-to-tr from-primary to-accent mb-4">
-          <div className="w-full h-full rounded-full bg-background p-1">
-            <img src="https://picsum.photos/seed/user123/200/200" className="w-full h-full rounded-full object-cover" />
-          </div>
-        </div>
-        <h2 className="text-xl font-bold tracking-tight">Agent_1515</h2>
-        <p className="text-[10px] font-mono text-primary uppercase tracking-[0.3em] mt-1">Level 4 Investigator</p>
-      </div>
-    </div>
-
-    <div className="grid grid-cols-3 gap-4">
-      {[
-        { label: 'Files', value: '124', icon: FileText },
-        { label: 'Rank', value: '#12', icon: ShieldCheck },
-        { label: 'XP', value: '8.2k', icon: Zap },
-      ].map(stat => (
-        <div key={stat.label} className="glass-card rounded-2xl p-4 text-center space-y-1">
-          <stat.icon size={16} className="mx-auto text-primary mb-1" />
-          <div className="text-lg font-bold">{stat.value}</div>
-          <div className="text-[9px] opacity-50 uppercase tracking-widest">{stat.label}</div>
-        </div>
-      ))}
-    </div>
-
-    <div className="glass-card rounded-3xl overflow-hidden">
-      <div className="p-4 border-b border-white/5 bg-white/5">
-        <h3 className="text-xs font-bold uppercase tracking-widest">System Settings</h3>
-      </div>
-      <div className="divide-y divide-white/5">
-        {[
-          { label: 'Neural Interface', icon: Cpu, value: 'Active' },
-          { label: 'Dark Mode', icon: Moon, value: 'Enabled' },
-          { label: 'Data Encryption', icon: Lock, value: 'AES-256' },
-          { label: 'Logout', icon: LogOut, value: '', danger: true },
-        ].map(item => (
-          <button key={item.label} className="w-full p-4 flex items-center justify-between hover:bg-white/5 transition-colors group">
-            <div className="flex items-center gap-3">
-              <item.icon size={18} className={item.danger ? 'text-red-500' : 'text-primary'} />
-              <span className={`text-sm ${item.danger ? 'text-red-500' : 'opacity-80'}`}>{item.label}</span>
-            </div>
-            <span className="text-[10px] font-mono opacity-40 group-hover:opacity-100 transition-opacity">{item.value}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  </motion.div>
-);
 
 const VaultView = ({ vault, onSelect }: { vault: ArchiveItem[], onSelect: (item: ArchiveItem) => void }) => {
   return (
@@ -692,12 +640,19 @@ export default function App() {
   const [view, setView] = useState<View>('DOSSIER');
   const [selectedItem, setSelectedItem] = useState<ArchiveItem | null>(null);
   const [archives, setArchives] = useState<ArchiveItem[]>(ARCHIVES);
-  const [vault, setVault] = useState<ArchiveItem[]>([]);
+  const [vault, setVault] = useState<ArchiveItem[]>(() => {
+    const saved = localStorage.getItem('archive_vault');
+    return saved ? JSON.parse(saved) : [];
+  });
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    localStorage.setItem('archive_vault', JSON.stringify(vault));
+  }, [vault]);
 
   const toggleVault = (item: ArchiveItem) => {
     setVault(prev => {
@@ -814,7 +769,17 @@ export default function App() {
   const renderView = () => {
     switch (view) {
       case 'DOSSIER':
-        return <DossierFeedView onSelect={handleSelectItem} archives={archives} onLoadMore={loadMore} loading={loading} />;
+        return <DossierFeedView 
+          onSelect={handleSelectItem} 
+          archives={archives} 
+          onLoadMore={loadMore} 
+          loading={loading} 
+          onStoryClick={(topic) => {
+            setSearchQuery(topic);
+            fetchArchiveData(topic, true);
+            setView('INVESTIGATE');
+          }}
+        />;
       case 'INVESTIGATE':
         return (
           <InvestigateView 
@@ -834,8 +799,6 @@ export default function App() {
         );
       case 'VAULT':
         return <VaultView vault={vault} onSelect={handleSelectItem} />;
-      case 'IDENTITY':
-        return <IdentityView />;
       case 'DETAIL':
         return selectedItem ? (
           <DossierDetailView 
@@ -846,7 +809,17 @@ export default function App() {
           />
         ) : null;
       default:
-        return <DossierFeedView onSelect={handleSelectItem} archives={archives} onLoadMore={loadMore} loading={loading} />;
+        return <DossierFeedView 
+          onSelect={handleSelectItem} 
+          archives={archives} 
+          onLoadMore={loadMore} 
+          loading={loading} 
+          onStoryClick={(topic) => {
+            setSearchQuery(topic);
+            fetchArchiveData(topic, true);
+            setView('INVESTIGATE');
+          }}
+        />;
     }
   };
 
@@ -903,7 +876,6 @@ export default function App() {
                     { id: 'DOSSIER', label: 'Feed', icon: Grid },
                     { id: 'INVESTIGATE', label: 'Explore', icon: Search },
                     { id: 'VAULT', label: 'Vault', icon: FolderHeart },
-                    { id: 'IDENTITY', label: 'Profile', icon: User },
                   ].map((item) => (
                     <button
                       key={item.id}

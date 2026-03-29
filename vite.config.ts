@@ -12,10 +12,10 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
   return {
     plugins: [
-      react(), 
       tailwindcss(),
+      react(), 
       legacy({
-        targets: ['defaults', 'not IE 11', 'android >= 5'],
+        targets: ['defaults', 'not IE 11', 'android >= 7'],
       }),
     ],
     base: './',
