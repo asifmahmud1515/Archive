@@ -46,6 +46,29 @@
     min-height: 100%;
     margin: 0;
     padding: 0;
+    background-image: 
+      linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+      linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 4px, 3px 100%;
+    position: relative;
+    animation: scanline 10s linear infinite;
+  }
+
+  @keyframes scanline {
+    0% { background-position: 0 0, 0 0; }
+    100% { background-position: 0 100%, 0 0; }
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 50%, transparent 0%, rgba(0, 0, 0, 0.4) 100%);
+    pointer-events: none;
+    z-index: 1;
   }
 }
 
@@ -58,18 +81,24 @@
   }
 
   .glass-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
   }
 
   .neon-glow {
-    box-shadow: 0 0 20px rgba(0, 242, 255, 0.15);
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
   }
 
   .neon-text {
-    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+    text-shadow: 0 0 8px rgba(0, 242, 255, 0.4);
+  }
+
+  .classified-tag {
+    @apply text-[9px] font-mono font-bold px-1.5 py-0.5 border border-primary/30 text-primary uppercase tracking-tighter;
+    background: rgba(0, 242, 255, 0.05);
   }
 
   .scrollbar-hide::-webkit-scrollbar {

@@ -132,8 +132,8 @@ const GlassOverlay = () => (
 );
 
 const TopBar = ({ title, onBack, onMenu, onSearch }: { title: string; onBack?: () => void; onMenu?: () => void; onSearch?: () => void }) => (
-  <header className="fixed top-0 w-full flex justify-between items-center px-6 pt-[env(safe-area-inset-top)] h-[calc(5rem+env(safe-area-inset-top))] glass z-50 border-b border-white/5">
-    <div className="flex items-center gap-4">
+  <header className="fixed top-0 w-full flex justify-between items-center px-8 pt-[env(safe-area-inset-top)] h-[calc(5rem+env(safe-area-inset-top))] glass z-50 border-b border-white/5">
+    <div className="flex items-center gap-6">
       {onBack ? (
         <button onClick={onBack} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
           <ArrowLeft size={20} />
@@ -168,9 +168,9 @@ const BottomNav = ({ activeView, setView }: { activeView: View; setView: (v: Vie
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 pb-[env(safe-area-inset-bottom)] z-50 flex justify-center">
-      <div className="w-full max-w-md px-6 pb-6">
-        <nav className="glass rounded-3xl flex justify-around items-center h-16 px-2 shadow-2xl border border-white/10">
+    <div className="fixed bottom-0 left-0 right-0 pb-[env(safe-area-inset-bottom)] z-50 flex justify-center pointer-events-none">
+      <div className="w-full max-w-md px-6 pb-8 pointer-events-auto">
+        <nav className="glass rounded-2xl flex justify-around items-center h-16 px-4 shadow-2xl border border-white/10">
           {navItems.map((item) => {
             const isActive = activeView === item.id || (activeView === 'DETAIL' && item.id === 'DOSSIER');
             return (
@@ -223,15 +223,15 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-32 pb-40 px-4 max-w-2xl mx-auto space-y-8"
+      className="pt-24 pb-32 px-4 max-w-2xl mx-auto space-y-20"
     >
       {/* Stories/Highlights */}
-      <section className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+      <section className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide -mx-4 px-4">
         {['UFOs', 'Noir', 'Space', 'Secrets', 'History'].map((story, i) => (
           <button 
             key={story} 
             onClick={() => onStoryClick(story)}
-            className="flex flex-col items-center gap-2 flex-shrink-0 group"
+            className="flex flex-col items-center gap-2 flex-shrink-0 group w-20"
           >
             <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-primary via-accent to-primary animate-spin-slow group-hover:scale-110 transition-transform">
               <div className="w-full h-full rounded-full bg-background p-1">
@@ -240,10 +240,11 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
                   alt={story} 
                   className="w-full h-full rounded-full object-cover"
                   referrerPolicy="no-referrer"
+                  loading="lazy"
                 />
               </div>
             </div>
-            <span className="text-[10px] font-medium tracking-wide uppercase opacity-70 group-hover:opacity-100 transition-opacity">{story}</span>
+            <span className="text-[10px] font-medium tracking-wide uppercase opacity-70 group-hover:opacity-100 transition-opacity truncate w-full text-center">{story}</span>
           </button>
         ))}
       </section>
@@ -258,15 +259,19 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
           onClick={() => onSelect(item)}
           className="glass-card rounded-3xl overflow-hidden cursor-pointer group"
         >
-          <div className="p-4 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-surface-high overflow-hidden">
+          <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent" />
+          <div className="p-6 flex items-center gap-6">
+            <div className="w-12 h-12 rounded-full bg-surface-high overflow-hidden border border-white/10">
               <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
-            <div>
-              <h4 className="text-xs font-bold tracking-tight">{item.creator || 'ARCHIVE_CORE'}</h4>
-              <p className="text-[9px] opacity-50 uppercase tracking-widest">{item.year} // {item.type}</p>
+            <div className="flex-1">
+              <div className="flex items-center gap-2">
+                <h4 className="text-xs font-bold tracking-tight">{item.creator || 'ARCHIVE_CORE'}</h4>
+                <span className="classified-tag">DECLASSFIED</span>
+              </div>
+              <p className="text-[9px] opacity-40 uppercase tracking-widest font-mono">{item.year} // {item.type}</p>
             </div>
-            <button className="ml-auto text-on-surface-variant">
+            <button className="text-on-surface-variant/50 hover:text-primary transition-colors">
               <MoreVertical size={16} />
             </button>
           </div>
@@ -284,8 +289,8 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
             </div>
           )}
 
-          <div className="p-5 space-y-3">
-            <div className="flex gap-4">
+          <div className="p-8 space-y-7">
+            <div className="flex gap-8">
               <button className="hover:text-primary transition-colors"><FolderHeart size={22} /></button>
               <button className="hover:text-primary transition-colors"><MessageSquare size={22} /></button>
               <button className="hover:text-primary transition-colors"><Share2 size={22} /></button>
@@ -299,7 +304,7 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
             </p>
             <div className="flex flex-wrap gap-2 pt-2">
               {item.tags?.slice(0, 3).map(tag => (
-                <span key={tag} className="text-[9px] font-mono text-primary/60 uppercase tracking-widest">
+                <span key={tag} className="text-[8px] font-mono text-primary/40 uppercase tracking-widest bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">
                   #{tag.replace('#', '')}
                 </span>
               ))}
@@ -340,7 +345,7 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
       exit={{ opacity: 0 }}
       className="pt-24 pb-32 px-6 max-w-lg mx-auto"
     >
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-14">
         <h2 className="text-2xl font-bold neon-text">Explore</h2>
         <button 
           onClick={onRandom}
@@ -351,7 +356,7 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
         </button>
       </div>
 
-      <form onSubmit={onSearch} className="relative mb-8">
+      <form onSubmit={onSearch} className="relative mb-12">
         <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary">
           <Search size={20} />
         </div>
@@ -360,7 +365,7 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search the digital void..."
-          className="w-full h-14 pl-12 pr-4 glass rounded-2xl border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all outline-none text-sm"
+          className="w-full h-14 pl-12 pr-4 glass rounded-2xl border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all outline-none text-base"
         />
         <button 
           type="submit"
@@ -390,12 +395,18 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
       </section>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <Loader2 className="animate-spin text-primary" size={32} />
-          <p className="text-[10px] font-mono uppercase tracking-[0.3em] animate-pulse">Decrypting data streams...</p>
+        <div className="flex flex-col items-center justify-center py-24 gap-6">
+          <div className="relative">
+            <Loader2 className="animate-spin text-primary" size={40} />
+            <div className="absolute inset-0 blur-lg bg-primary/20 animate-pulse" />
+          </div>
+          <div className="space-y-2 text-center">
+            <p className="text-[10px] font-mono uppercase tracking-[0.4em] text-primary animate-pulse">Decrypting data streams...</p>
+            <p className="text-[8px] font-mono uppercase tracking-[0.2em] opacity-30">Establishing secure neural handshake</p>
+          </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-8">
           {results.map((item) => (
             <motion.div
               key={item.id}
@@ -441,17 +452,17 @@ const VaultView = ({ vault, onSelect }: { vault: ArchiveItem[], onSelect: (item:
       </div>
 
       {vault.length === 0 ? (
-        <div className="glass-card rounded-3xl p-12 text-center space-y-4">
-          <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto">
-            <FolderHeart size={32} className="opacity-20" />
+        <div className="glass-card rounded-3xl p-20 text-center space-y-8">
+          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto">
+            <FolderHeart size={48} className="opacity-20" />
           </div>
           <p className="text-sm opacity-50 leading-relaxed">Your vault is empty. Secure files from the feed to access them offline.</p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-8">
           {vault.map(item => (
-            <div key={item.id} onClick={() => onSelect(item)} className="glass-card rounded-2xl p-4 flex gap-4 items-center group cursor-pointer hover:border-primary/30 transition-colors">
-              <div className="w-16 h-16 rounded-xl overflow-hidden flex-shrink-0 bg-surface-high">
+            <div key={item.id} onClick={() => onSelect(item)} className="glass-card rounded-2xl p-6 flex gap-8 items-center group cursor-pointer hover:border-primary/30 transition-colors">
+              <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-high">
                 <img src={item.image || `https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
               <div className="flex-1 min-w-0">
@@ -493,18 +504,24 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
         
         <button 
           onClick={onBack}
-          className="absolute top-12 left-6 w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-white/20 transition-all"
+          className="absolute top-[calc(1rem+env(safe-area-inset-top))] left-6 w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-white/20 transition-all z-10"
         >
-          <ArrowLeft size={24} />
+          <ArrowLeft size={20} />
         </button>
 
         <div className="absolute bottom-8 left-8 right-8 space-y-4">
-          <div className="flex gap-2">
-            <span className="bg-primary text-background text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">
+          <div className="flex flex-wrap gap-2">
+            <span className="classified-tag !text-background !bg-primary border-none">
               {item.type}
             </span>
-            <span className="glass text-[10px] font-bold px-2 py-1 rounded uppercase tracking-widest">
+            <span className="classified-tag">
               {item.year}
+            </span>
+            <span className="classified-tag !text-accent !border-accent/30">
+              SECURE_LINK
+            </span>
+            <span className="classified-tag !text-on-surface-variant/50 !border-white/5">
+              REF: {item.identifier?.substring(0, 8).toUpperCase()}
             </span>
           </div>
           <h2 className="text-3xl font-bold tracking-tight leading-tight neon-text">
@@ -513,27 +530,27 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
         </div>
       </div>
 
-      <div className="px-8 py-8 space-y-8 max-w-2xl mx-auto">
-        <div className="flex justify-around glass p-4 rounded-2xl border border-white/10">
-          <button onClick={() => onToggleVault(item)} className={`flex flex-col items-center gap-1 ${isInVault ? 'text-primary' : 'opacity-50'}`}>
-            <FolderHeart size={24} />
+      <div className="px-8 py-16 space-y-14 max-w-2xl mx-auto">
+        <div className="flex justify-around glass p-8 rounded-2xl border border-white/10">
+          <button onClick={() => onToggleVault(item)} className={`flex flex-col items-center gap-3 ${isInVault ? 'text-primary' : 'opacity-50'}`}>
+            <FolderHeart size={26} />
             <span className="text-[9px] font-bold uppercase">Vault</span>
           </button>
-          <button className="flex flex-col items-center gap-1 opacity-50">
-            <Share2 size={24} />
+          <button className="flex flex-col items-center gap-3 opacity-50">
+            <Share2 size={26} />
             <span className="text-[9px] font-bold uppercase">Share</span>
           </button>
-          <button className="flex flex-col items-center gap-1 opacity-50">
-            <Download size={24} />
+          <button className="flex flex-col items-center gap-3 opacity-50">
+            <Download size={26} />
             <span className="text-[9px] font-bold uppercase">Export</span>
           </button>
-          <button className="flex flex-col items-center gap-1 opacity-50">
-            <Info size={24} />
+          <button className="flex flex-col items-center gap-3 opacity-50">
+            <Info size={26} />
             <span className="text-[9px] font-bold uppercase">Info</span>
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-8">
           <h4 className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Intelligence Report</h4>
           <p className="text-base opacity-80 leading-relaxed font-light">
             {item.description}
@@ -541,11 +558,11 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
         </div>
 
         {item.tags && item.tags.length > 0 && (
-          <div className="space-y-4">
+          <div className="space-y-8">
             <h4 className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Metadata Tags</h4>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-4">
               {item.tags.map(tag => (
-                <span key={tag} className="glass px-3 py-1 rounded-full text-[10px] font-mono opacity-60">
+                <span key={tag} className="glass px-5 py-2 rounded-full text-[10px] font-mono opacity-60">
                   #{tag.replace('#', '')}
                 </span>
               ))}
@@ -553,9 +570,9 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
           </div>
         )}
 
-        <div className="glass-card rounded-3xl p-6 space-y-4">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-surface-high overflow-hidden">
+        <div className="glass-card rounded-3xl p-10 space-y-8">
+          <div className="flex items-center gap-8">
+            <div className="w-16 h-16 rounded-full bg-surface-high overflow-hidden">
               <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
             <div>
@@ -609,7 +626,7 @@ const Intro = ({ onComplete }: { onComplete: () => void }) => {
             className="absolute top-0 left-0 h-[2px] bg-primary neon-glow"
           />
           
-          <h1 className="font-headline text-5xl md:text-7xl tracking-tighter font-bold neon-text mb-2">
+          <h1 className="font-headline text-5xl md:text-7xl tracking-tighter font-bold neon-text mb-2 animate-pulse">
             ARCHIVE
           </h1>
           <p className="text-[10px] font-mono text-primary uppercase tracking-[0.5em] opacity-50">
@@ -889,7 +906,7 @@ export default function App() {
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed top-0 left-0 h-full w-80 glass z-[70] border-r border-white/10 p-8 flex flex-col"
+                className="fixed top-0 left-0 h-full w-[280px] max-w-[85vw] glass z-[70] border-r border-white/10 p-8 flex flex-col"
               >
                 <div className="flex justify-between items-center mb-12">
                   <h2 className="font-headline text-2xl font-bold neon-text">ARCHIVE</h2>
