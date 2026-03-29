@@ -19,25 +19,24 @@
         padding: 0;
         box-sizing: border-box;
       }
-      html {
-        height: auto;
-        min-height: 100%;
-        overflow: visible;
-      }
-      body {
-        background-color: #050505 !important;
-        color: #ffffff !important;
+      html, body {
+        margin: 0;
+        padding: 0;
         width: 100%;
         min-height: 100%;
-        overflow-y: auto !important;
         overflow-x: hidden;
+        background-color: #050505;
+        color: #ffffff;
+      }
+      body {
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
       }
       #root {
+        width: 100%;
         min-height: 100%;
-        background-color: #050505;
-        overflow: visible;
+        display: flex;
+        flex-direction: column;
       }
     </style>
   </head>

@@ -132,26 +132,26 @@ const GlassOverlay = () => (
 );
 
 const TopBar = ({ title, onBack, onMenu, onSearch }: { title: string; onBack?: () => void; onMenu?: () => void; onSearch?: () => void }) => (
-  <header className="fixed top-0 w-full flex justify-between items-center px-8 pt-[env(safe-area-inset-top)] h-[calc(5rem+env(safe-area-inset-top))] glass z-50 border-b border-white/5">
-    <div className="flex items-center gap-6">
+  <header className="fixed top-0 w-full flex justify-between items-center px-8 md:px-12 pt-[env(safe-area-inset-top)] min-h-[5rem] md:min-h-[7rem] glass z-50 border-b border-white/5">
+    <div className="flex items-center gap-4 md:gap-12">
       {onBack ? (
-        <button onClick={onBack} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
-          <ArrowLeft size={20} />
+        <button onClick={onBack} className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+          <ArrowLeft size={24} className="md:w-7 md:h-7" />
         </button>
       ) : (
-        <button onClick={onMenu} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
-          <Menu size={20} />
+        <button onClick={onMenu} className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+          <Menu size={24} className="md:w-7 md:h-7" />
         </button>
       )}
-      <h1 className="font-headline text-xl font-bold tracking-tight neon-text">
+      <h1 className="font-headline text-xl md:text-3xl font-bold tracking-tight neon-text truncate max-w-[50vw]">
         {title}
       </h1>
     </div>
-    <div className="flex items-center gap-2">
-      <button onClick={onSearch} className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
-        <Search size={20} />
+    <div className="flex items-center gap-3 md:gap-6">
+      <button onClick={onSearch} className="w-10 h-10 md:w-14 md:h-14 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
+        <Search size={24} className="md:w-7 md:h-7" />
       </button>
-      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-primary to-accent p-[1px]">
+      <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gradient-to-tr from-primary to-accent p-[1px]">
         <div className="w-full h-full rounded-full bg-background flex items-center justify-center overflow-hidden">
           <img src="https://picsum.photos/seed/user123/100/100" alt="Profile" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
         </div>
@@ -169,8 +169,8 @@ const BottomNav = ({ activeView, setView }: { activeView: View; setView: (v: Vie
 
   return (
     <div className="fixed bottom-0 left-0 right-0 pb-[env(safe-area-inset-bottom)] z-50 flex justify-center pointer-events-none">
-      <div className="w-full max-w-md px-6 pb-8 pointer-events-auto">
-        <nav className="glass rounded-2xl flex justify-around items-center h-16 px-4 shadow-2xl border border-white/10">
+      <div className="w-full max-w-md px-8 md:px-12 pb-8 md:pb-16 pointer-events-auto">
+        <nav className="glass rounded-2xl md:rounded-[2.5rem] flex justify-around items-center h-16 md:h-24 px-4 md:px-10 shadow-2xl border border-white/10">
           {navItems.map((item) => {
             const isActive = activeView === item.id || (activeView === 'DETAIL' && item.id === 'DOSSIER');
             return (
@@ -179,13 +179,13 @@ const BottomNav = ({ activeView, setView }: { activeView: View; setView: (v: Vie
                 onClick={() => setView(item.id)}
                 className="relative flex flex-col items-center justify-center w-full h-full transition-all duration-300"
               >
-                <div className={`p-2 rounded-xl transition-all duration-300 ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}>
-                  <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+                <div className={`p-2 md:p-4 rounded-xl md:rounded-2xl transition-all duration-300 ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}>
+                  <item.icon size={24} className="md:w-8 md:h-8" strokeWidth={isActive ? 2.5 : 2} />
                 </div>
                 {isActive && (
                   <motion.div 
                     layoutId="activeNav"
-                    className="absolute -bottom-1 w-1 h-1 rounded-full bg-primary neon-glow"
+                    className="absolute -bottom-1 md:-bottom-3 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-primary neon-glow"
                   />
                 )}
               </button>
@@ -223,28 +223,28 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-24 pb-32 px-4 max-w-2xl mx-auto space-y-20"
+      className="pt-24 md:pt-40 pb-32 md:pb-56 px-4 md:px-8 max-w-full md:max-w-2xl mx-auto space-y-24 md:space-y-56"
     >
       {/* Stories/Highlights */}
-      <section className="flex gap-6 overflow-x-auto pb-6 scrollbar-hide -mx-4 px-4">
+      <section className="flex gap-6 md:gap-12 overflow-x-auto pb-6 md:pb-12 scrollbar-hide -mx-4 md:-mx-8 px-4 md:px-8">
         {['UFOs', 'Noir', 'Space', 'Secrets', 'History'].map((story, i) => (
           <button 
             key={story} 
             onClick={() => onStoryClick(story)}
-            className="flex flex-col items-center gap-2 flex-shrink-0 group w-20"
+            className="flex flex-col items-center gap-3 md:gap-6 flex-shrink-0 group w-20 md:w-28"
           >
-            <div className="w-16 h-16 rounded-full p-[2px] bg-gradient-to-tr from-primary via-accent to-primary animate-spin-slow group-hover:scale-110 transition-transform">
-              <div className="w-full h-full rounded-full bg-background p-1">
+            <div className="w-16 h-16 md:w-24 md:h-24 rounded-full p-[2px] md:p-[4px] bg-gradient-to-tr from-primary via-accent to-primary animate-spin-slow group-hover:scale-110 transition-transform">
+              <div className="w-full h-full rounded-full bg-background p-1 md:p-2">
                 <img 
-                  src={`https://picsum.photos/seed/${story}/100/100`} 
+                  src={`https://picsum.photos/seed/${story}/150/150`} 
                   alt={story} 
-                  className="w-full h-full rounded-full object-cover"
+                  className="w-full h-full rounded-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                   referrerPolicy="no-referrer"
                   loading="lazy"
                 />
               </div>
             </div>
-            <span className="text-[10px] font-medium tracking-wide uppercase opacity-70 group-hover:opacity-100 transition-opacity truncate w-full text-center">{story}</span>
+            <span className="text-[9px] md:text-[11px] font-bold tracking-[0.2em] md:tracking-[0.25em] uppercase opacity-40 group-hover:opacity-100 transition-opacity truncate w-full text-center">{story}</span>
           </button>
         ))}
       </section>
@@ -257,54 +257,56 @@ const DossierFeedView = ({ onSelect, archives, onLoadMore, loading, onStoryClick
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           onClick={() => onSelect(item)}
-          className="glass-card rounded-3xl overflow-hidden cursor-pointer group"
+          className="glass-card rounded-2xl md:rounded-[2.5rem] overflow-hidden cursor-pointer group w-full"
         >
-          <div className="h-1 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent" />
-          <div className="p-6 flex items-center gap-6">
-            <div className="w-12 h-12 rounded-full bg-surface-high overflow-hidden border border-white/10">
+          <div className="h-1 md:h-1.5 bg-gradient-to-r from-primary/20 via-primary/5 to-transparent" />
+          <div className="p-6 md:p-12 flex items-center gap-6 md:gap-12">
+            <div className="w-12 h-12 md:w-20 md:h-20 rounded-full bg-surface-high overflow-hidden border border-white/10 shadow-2xl flex-shrink-0">
               <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <h4 className="text-xs font-bold tracking-tight">{item.creator || 'ARCHIVE_CORE'}</h4>
-                <span className="classified-tag">DECLASSFIED</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-center gap-2 md:gap-6 mb-1 md:mb-3">
+                <h4 className="text-sm md:text-base font-bold tracking-tight text-primary/80 truncate">{item.creator || 'ARCHIVE_CORE'}</h4>
+                <span className="classified-tag scale-75 md:scale-100 origin-left">DECLASSFIED</span>
               </div>
-              <p className="text-[9px] opacity-40 uppercase tracking-widest font-mono">{item.year} // {item.type}</p>
+              <p className="text-[9px] md:text-[11px] opacity-30 uppercase tracking-[0.2em] md:tracking-[0.35em] font-mono truncate">{item.year} // {item.type}</p>
             </div>
-            <button className="text-on-surface-variant/50 hover:text-primary transition-colors">
-              <MoreVertical size={16} />
+            <button className="text-on-surface-variant/30 hover:text-primary transition-colors p-2 md:p-3">
+              <MoreVertical size={20} className="md:w-6 md:h-6" />
             </button>
           </div>
 
           {item.image && (
-            <div className="relative aspect-square overflow-hidden bg-surface-container">
+            <div className="relative aspect-[4/3] overflow-hidden bg-surface-container w-full">
               <img 
                 src={item.image} 
                 alt={item.title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-auto min-h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                 referrerPolicy="no-referrer"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
             </div>
           )}
 
-          <div className="p-8 space-y-7">
-            <div className="flex gap-8">
-              <button className="hover:text-primary transition-colors"><FolderHeart size={22} /></button>
-              <button className="hover:text-primary transition-colors"><MessageSquare size={22} /></button>
-              <button className="hover:text-primary transition-colors"><Share2 size={22} /></button>
-              <button className="ml-auto hover:text-primary transition-colors"><Bookmark size={22} /></button>
+          <div className="p-8 md:p-16 space-y-12 md:space-y-24">
+            <div className="flex gap-12 md:gap-24">
+              <button className="hover:text-primary transition-colors transform hover:scale-110 active:scale-90"><FolderHeart size={24} className="md:w-7 md:h-7" /></button>
+              <button className="hover:text-primary transition-colors transform hover:scale-110 active:scale-90"><MessageSquare size={24} className="md:w-7 md:h-7" /></button>
+              <button className="hover:text-primary transition-colors transform hover:scale-110 active:scale-90"><Share2 size={24} className="md:w-7 md:h-7" /></button>
+              <button className="ml-auto hover:text-primary transition-colors transform hover:scale-110 active:scale-90"><Bookmark size={24} className="md:w-7 md:h-7" /></button>
             </div>
-            <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
-              {item.title}
-            </h3>
-            <p className="text-sm opacity-70 line-clamp-2 leading-relaxed">
-              {item.description}
-            </p>
-            <div className="flex flex-wrap gap-2 pt-2">
-              {item.tags?.slice(0, 3).map(tag => (
-                <span key={tag} className="text-[8px] font-mono text-primary/40 uppercase tracking-widest bg-primary/5 px-1.5 py-0.5 rounded border border-primary/10">
+            <div className="space-y-6 md:space-y-12">
+              <h3 className="font-bold text-xl md:text-3xl leading-tight group-hover:text-primary transition-colors tracking-tight">
+                {item.title}
+              </h3>
+              <p className="text-sm md:text-lg opacity-60 line-clamp-3 leading-relaxed font-light italic">
+                {item.description}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-3 md:gap-6 pt-2 md:pt-6">
+              {item.tags?.slice(0, 4).map(tag => (
+                <span key={tag} className="text-[9px] md:text-[11px] font-mono text-primary/50 uppercase tracking-[0.15em] md:tracking-[0.25em] bg-primary/5 px-3 md:px-4 py-1 md:py-1.5 rounded-full border border-primary/10">
                   #{tag.replace('#', '')}
                 </span>
               ))}
@@ -343,41 +345,41 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-24 pb-32 px-6 max-w-lg mx-auto"
+      className="pt-24 md:pt-40 pb-32 md:pb-56 px-6 md:px-10 max-w-full md:max-w-lg mx-auto"
     >
-      <div className="flex justify-between items-center mb-14">
-        <h2 className="text-2xl font-bold neon-text">Explore</h2>
+      <div className="flex justify-between items-center mb-12 md:mb-24">
+        <h2 className="text-2xl md:text-4xl font-bold neon-text tracking-tighter">Explore</h2>
         <button 
           onClick={onRandom}
-          className="flex items-center gap-2 text-[10px] font-mono text-primary hover:text-white transition-colors uppercase"
+          className="flex items-center gap-2 md:gap-4 text-[10px] md:text-[12px] font-mono text-primary hover:text-white transition-colors uppercase tracking-[0.2em] md:tracking-[0.25em]"
         >
-          <Shuffle size={14} />
+          <Shuffle size={14} className="md:w-[18px] md:h-[18px]" />
           Randomized Sync
         </button>
       </div>
 
-      <form onSubmit={onSearch} className="relative mb-12">
-        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary">
-          <Search size={20} />
+      <form onSubmit={onSearch} className="relative mb-12 md:mb-20">
+        <div className="absolute inset-y-0 left-4 md:left-6 flex items-center pointer-events-none text-primary">
+          <Search size={20} className="md:w-7 md:h-7" />
         </div>
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search the digital void..."
-          className="w-full h-14 pl-12 pr-4 glass rounded-2xl border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all outline-none text-base"
+          className="w-full h-14 md:h-20 pl-12 md:pl-16 pr-6 md:pr-8 glass rounded-xl md:rounded-[1.5rem] border border-white/10 focus:border-primary/50 focus:ring-1 focus:ring-primary/50 transition-all outline-none text-sm md:text-lg"
         />
         <button 
           type="submit"
-          className="absolute right-2 top-2 bottom-2 px-4 bg-primary text-background rounded-xl font-bold text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all"
+          className="absolute right-2 top-2 bottom-2 px-4 md:px-8 bg-primary text-background rounded-lg md:rounded-2xl font-bold text-[10px] md:text-sm uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all"
         >
           Scan
         </button>
       </form>
 
-      <section className="mb-8">
-        <h3 className="text-[10px] font-mono text-primary/60 uppercase tracking-[0.3em] mb-4">Trending Inquiries</h3>
-        <div className="flex flex-wrap gap-2">
+      <section className="mb-12 md:mb-20">
+        <h3 className="text-[10px] md:text-[12px] font-mono text-primary/60 uppercase tracking-[0.3em] md:tracking-[0.5em] mb-4 md:mb-8">Trending Inquiries</h3>
+        <div className="flex flex-wrap gap-3 md:gap-6">
           {trending.map(item => (
             <button 
               key={item.label}
@@ -386,7 +388,7 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
                 const mockEvent = { preventDefault: () => {} } as React.FormEvent;
                 onSearch(mockEvent);
               }}
-              className="glass px-3 py-2 rounded-xl text-[10px] font-bold tracking-widest uppercase hover:bg-primary hover:text-background transition-all"
+              className="glass px-4 py-2 md:px-6 md:py-4 rounded-xl md:rounded-2xl text-[9px] md:text-[11px] font-bold tracking-widest uppercase hover:bg-primary hover:text-background transition-all"
             >
               {item.label}
             </button>
@@ -395,40 +397,40 @@ const InvestigateView = ({ onSearch, query, setQuery, results, loading, onSelect
       </section>
 
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24 gap-6">
+        <div className="flex flex-col items-center justify-center py-20 md:py-40 gap-8 md:gap-12">
           <div className="relative">
-            <Loader2 className="animate-spin text-primary" size={40} />
-            <div className="absolute inset-0 blur-lg bg-primary/20 animate-pulse" />
+            <Loader2 className="animate-spin text-primary md:w-14 md:h-14" size={40} />
+            <div className="absolute inset-0 blur-xl md:blur-2xl bg-primary/20 animate-pulse" />
           </div>
-          <div className="space-y-2 text-center">
-            <p className="text-[10px] font-mono uppercase tracking-[0.4em] text-primary animate-pulse">Decrypting data streams...</p>
-            <p className="text-[8px] font-mono uppercase tracking-[0.2em] opacity-30">Establishing secure neural handshake</p>
+          <div className="space-y-4 md:space-y-6 text-center">
+            <p className="text-[10px] md:text-[12px] font-mono uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary animate-pulse">Decrypting data streams...</p>
+            <p className="text-[9px] md:text-[10px] font-mono uppercase tracking-[0.3em] md:tracking-[0.4em] opacity-30">Establishing secure neural handshake</p>
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-8">
+        <div className="grid grid-cols-2 gap-6 md:gap-16">
           {results.map((item) => (
             <motion.div
               key={item.id}
               layoutId={item.id}
               onClick={() => onSelect(item)}
-              className="glass-card rounded-2xl overflow-hidden cursor-pointer group aspect-[3/4] relative bg-surface-container"
+              className="glass-card rounded-xl md:rounded-[2rem] overflow-hidden cursor-pointer group aspect-[3/4] relative bg-surface-container"
             >
               {item.image ? (
                 <img 
                   src={item.image} 
-                  className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-500" 
+                  className="w-full h-auto min-h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity duration-700" 
                   referrerPolicy="no-referrer"
                   loading="lazy"
                 />
               ) : (
                 <div className="w-full h-full bg-surface-high flex items-center justify-center">
-                  <FileText size={32} className="opacity-20" />
+                  <FileText size={32} className="md:w-12 md:h-12 opacity-20" />
                 </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent p-4 flex flex-col justify-end">
-                <h4 className="text-[10px] font-bold leading-tight line-clamp-2">{item.title}</h4>
-                <p className="text-[8px] opacity-50 uppercase mt-1">{item.year}</p>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent p-4 md:p-8 flex flex-col justify-end gap-1 md:gap-3">
+                <h4 className="text-[10px] md:text-[12px] font-bold leading-tight line-clamp-2 uppercase tracking-wide">{item.title}</h4>
+                <p className="text-[8px] md:text-[10px] opacity-50 uppercase tracking-widest">{item.year}</p>
               </div>
             </motion.div>
           ))}
@@ -444,32 +446,32 @@ const VaultView = ({ vault, onSelect }: { vault: ArchiveItem[], onSelect: (item:
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="pt-24 pb-32 px-6 max-w-lg mx-auto"
+      className="pt-24 md:pt-40 pb-32 md:pb-56 px-6 md:px-10 max-w-full md:max-w-lg mx-auto"
     >
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-bold neon-text">Your Vault</h2>
-        <span className="text-[10px] font-mono bg-primary/20 text-primary px-2 py-1 rounded-full">{vault.length} ITEMS</span>
+      <div className="flex items-center justify-between mb-12 md:mb-20">
+        <h2 className="text-2xl md:text-4xl font-bold neon-text tracking-tighter">Your Vault</h2>
+        <span className="text-[10px] md:text-[12px] font-mono bg-primary/20 text-primary px-3 md:px-4 py-1 md:py-2 rounded-full tracking-[0.15em] md:tracking-[0.2em]">{vault.length} ITEMS</span>
       </div>
 
       {vault.length === 0 ? (
-        <div className="glass-card rounded-3xl p-20 text-center space-y-8">
-          <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto">
-            <FolderHeart size={48} className="opacity-20" />
+        <div className="glass-card rounded-2xl md:rounded-[3rem] p-16 md:p-32 text-center space-y-8 md:space-y-16">
+          <div className="w-20 h-20 md:w-32 md:h-32 bg-white/5 rounded-full flex items-center justify-center mx-auto shadow-2xl">
+            <FolderHeart size={40} className="md:w-16 md:h-16 opacity-20" />
           </div>
-          <p className="text-sm opacity-50 leading-relaxed">Your vault is empty. Secure files from the feed to access them offline.</p>
+          <p className="text-sm md:text-lg opacity-50 leading-relaxed max-w-xs mx-auto">Your vault is empty. Secure files from the feed to access them offline.</p>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="space-y-8 md:space-y-16">
           {vault.map(item => (
-            <div key={item.id} onClick={() => onSelect(item)} className="glass-card rounded-2xl p-6 flex gap-8 items-center group cursor-pointer hover:border-primary/30 transition-colors">
-              <div className="w-20 h-20 rounded-xl overflow-hidden flex-shrink-0 bg-surface-high">
+            <div key={item.id} onClick={() => onSelect(item)} className="glass-card rounded-xl md:rounded-[2rem] p-6 md:p-10 flex gap-6 md:gap-12 items-center group cursor-pointer hover:border-primary/30 transition-all transform hover:scale-[1.02]">
+              <div className="w-16 h-16 md:w-28 md:h-28 rounded-xl md:rounded-2xl overflow-hidden flex-shrink-0 bg-surface-high shadow-xl">
                 <img src={item.image || `https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="font-bold text-sm truncate">{item.title}</h4>
-                <p className="text-[10px] opacity-50 uppercase tracking-widest mt-1">{item.type} // {item.year}</p>
+              <div className="flex-1 min-w-0 space-y-1 md:space-y-3">
+                <h4 className="font-bold text-base md:text-xl truncate group-hover:text-primary transition-colors">{item.title}</h4>
+                <p className="text-[10px] md:text-[12px] opacity-40 uppercase tracking-[0.3em] md:tracking-[0.4em] font-mono truncate">{item.type} // {item.year}</p>
               </div>
-              <ChevronRight size={20} className="opacity-20 group-hover:opacity-100 group-hover:text-primary transition-all" />
+              <ChevronRight size={24} className="md:w-8 md:h-8 opacity-20 group-hover:opacity-100 group-hover:text-primary group-hover:translate-x-3 transition-all" />
             </div>
           ))}
         </div>
@@ -492,77 +494,77 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
       animate={{ x: 0 }}
       exit={{ x: '100%' }}
       transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-      className="fixed inset-0 bg-background z-[60] overflow-y-auto overflow-x-hidden pb-32"
+      className="fixed inset-0 bg-background z-[60] overflow-y-auto overflow-x-hidden pb-32 md:pb-48"
     >
-      <div className="relative aspect-[4/5] md:aspect-video min-h-[400px]">
+      <div className="relative aspect-[4/5] md:aspect-video min-h-[300px] md:min-h-[500px] w-full">
         <img 
           src={item.image || `https://archive.org/services/img/${item.identifier}`} 
-          className="w-full h-full object-cover"
+          className="w-full h-auto min-h-full object-cover"
           referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
         
         <button 
           onClick={onBack}
-          className="absolute top-[calc(1rem+env(safe-area-inset-top))] left-6 w-10 h-10 glass rounded-full flex items-center justify-center hover:bg-white/20 transition-all z-10"
+          className="absolute top-[calc(1rem+env(safe-area-inset-top))] left-4 md:left-8 w-10 h-10 md:w-14 md:h-14 glass rounded-full flex items-center justify-center hover:bg-white/20 transition-all z-10"
         >
-          <ArrowLeft size={20} />
+          <ArrowLeft size={24} className="md:w-7 md:h-7" />
         </button>
 
-        <div className="absolute bottom-8 left-8 right-8 space-y-4">
-          <div className="flex flex-wrap gap-2">
-            <span className="classified-tag !text-background !bg-primary border-none">
+        <div className="absolute bottom-6 md:bottom-12 left-6 md:left-10 right-6 md:right-10 space-y-5 md:space-y-10">
+          <div className="flex flex-wrap gap-2 md:gap-4">
+            <span className="classified-tag !text-background !bg-primary border-none !px-2 md:!px-3 !py-0.5 md:!py-1 scale-90 md:scale-100 origin-left">
               {item.type}
             </span>
-            <span className="classified-tag">
+            <span className="classified-tag !px-2 md:!px-3 !py-0.5 md:!py-1 scale-90 md:scale-100 origin-left">
               {item.year}
             </span>
-            <span className="classified-tag !text-accent !border-accent/30">
+            <span className="classified-tag !text-accent !border-accent/30 !px-2 md:!px-3 !py-0.5 md:!py-1 scale-90 md:scale-100 origin-left">
               SECURE_LINK
             </span>
-            <span className="classified-tag !text-on-surface-variant/50 !border-white/5">
+            <span className="classified-tag !text-on-surface-variant/50 !border-white/5 !px-2 md:!px-3 !py-0.5 md:!py-1 scale-90 md:scale-100 origin-left">
               REF: {item.identifier?.substring(0, 8).toUpperCase()}
             </span>
           </div>
-          <h2 className="text-3xl font-bold tracking-tight leading-tight neon-text">
+          <h2 className="text-2xl md:text-4xl font-bold tracking-tight leading-tight neon-text">
             {item.title}
           </h2>
         </div>
       </div>
 
-      <div className="px-8 py-16 space-y-14 max-w-2xl mx-auto">
-        <div className="flex justify-around glass p-8 rounded-2xl border border-white/10">
-          <button onClick={() => onToggleVault(item)} className={`flex flex-col items-center gap-3 ${isInVault ? 'text-primary' : 'opacity-50'}`}>
-            <FolderHeart size={26} />
-            <span className="text-[9px] font-bold uppercase">Vault</span>
+      <div className="px-6 md:px-12 py-12 md:py-32 space-y-16 md:space-y-32 max-w-full md:max-w-2xl mx-auto">
+        <div className="flex justify-around glass p-6 md:p-12 rounded-2xl md:rounded-[2.5rem] border border-white/10 shadow-2xl">
+          <button onClick={() => onToggleVault(item)} className={`flex flex-col items-center gap-5 md:gap-10 ${isInVault ? 'text-primary' : 'opacity-50'} hover:scale-110 active:scale-90 transition-all`}>
+            <FolderHeart size={24} className="md:w-9 md:h-9" />
+            <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest">Vault</span>
           </button>
-          <button className="flex flex-col items-center gap-3 opacity-50">
-            <Share2 size={26} />
-            <span className="text-[9px] font-bold uppercase">Share</span>
+          <button className="flex flex-col items-center gap-5 md:gap-10 opacity-50 hover:scale-110 active:scale-90 transition-all">
+            <Share2 size={24} className="md:w-9 md:h-9" />
+            <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest">Share</span>
           </button>
-          <button className="flex flex-col items-center gap-3 opacity-50">
-            <Download size={26} />
-            <span className="text-[9px] font-bold uppercase">Export</span>
+          <button className="flex flex-col items-center gap-5 md:gap-10 opacity-50 hover:scale-110 active:scale-90 transition-all">
+            <Download size={24} className="md:w-9 md:h-9" />
+            <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest">Export</span>
           </button>
-          <button className="flex flex-col items-center gap-3 opacity-50">
-            <Info size={26} />
-            <span className="text-[9px] font-bold uppercase">Info</span>
+          <button className="flex flex-col items-center gap-5 md:gap-10 opacity-50 hover:scale-110 active:scale-90 transition-all">
+            <Info size={24} className="md:w-9 md:h-9" />
+            <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-widest">Info</span>
           </button>
         </div>
 
-        <div className="space-y-8">
-          <h4 className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Intelligence Report</h4>
-          <p className="text-base opacity-80 leading-relaxed font-light">
+        <div className="space-y-10 md:space-y-20">
+          <h4 className="text-[10px] md:text-sm font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/60">Intelligence Report</h4>
+          <p className="text-base md:text-xl opacity-80 leading-relaxed font-light italic">
             {item.description}
           </p>
         </div>
 
         {item.tags && item.tags.length > 0 && (
-          <div className="space-y-8">
-            <h4 className="text-xs font-bold uppercase tracking-[0.3em] text-primary">Metadata Tags</h4>
-            <div className="flex flex-wrap gap-4">
+          <div className="space-y-10 md:space-y-20">
+            <h4 className="text-[10px] md:text-sm font-bold uppercase tracking-[0.4em] md:tracking-[0.6em] text-primary/60">Metadata Tags</h4>
+            <div className="flex flex-wrap gap-3 md:gap-6">
               {item.tags.map(tag => (
-                <span key={tag} className="glass px-5 py-2 rounded-full text-[10px] font-mono opacity-60">
+                <span key={tag} className="glass px-4 md:px-8 py-2 md:py-3 rounded-full text-[10px] md:text-[12px] font-mono opacity-60 border border-white/5">
                   #{tag.replace('#', '')}
                 </span>
               ))}
@@ -570,21 +572,21 @@ const DossierDetailView = ({ item, onBack, onToggleVault, isInVault }: {
           </div>
         )}
 
-        <div className="glass-card rounded-3xl p-10 space-y-8">
-          <div className="flex items-center gap-8">
-            <div className="w-16 h-16 rounded-full bg-surface-high overflow-hidden">
+        <div className="glass-card rounded-2xl md:rounded-[3rem] p-8 md:p-16 space-y-12 md:space-y-20">
+          <div className="flex items-center gap-10 md:gap-20">
+            <div className="w-16 h-16 md:w-24 md:h-24 rounded-full bg-surface-high overflow-hidden border border-white/10 shadow-2xl flex-shrink-0">
               <img src={`https://archive.org/services/img/${item.identifier}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
             </div>
-            <div>
-              <p className="text-[10px] opacity-50 uppercase tracking-widest">Source Entity</p>
-              <p className="text-sm font-bold">{item.creator || 'Unknown Archive'}</p>
+            <div className="space-y-1 md:space-y-3 min-w-0">
+              <p className="text-[9px] md:text-[11px] opacity-50 uppercase tracking-widest truncate">Source Entity</p>
+              <p className="text-lg md:text-2xl font-bold tracking-tight truncate">{item.creator || 'Unknown Archive'}</p>
             </div>
           </div>
           <a 
             href={`https://archive.org/details/${item.identifier}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full py-4 bg-white/5 hover:bg-white/10 rounded-2xl text-center text-xs font-bold uppercase tracking-widest transition-all border border-white/5"
+            className="block w-full py-4 md:py-8 bg-white/5 hover:bg-white/10 rounded-xl md:rounded-[1.5rem] text-center text-[10px] md:text-sm font-bold uppercase tracking-[0.3em] md:tracking-[0.4em] transition-all border border-white/5"
           >
             Access Original Records
           </a>
